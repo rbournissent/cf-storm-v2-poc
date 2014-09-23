@@ -7,10 +7,38 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
+var api = require('./routes/api');
 // var users = require('./routes/users');
 
 var app = express();
+
+// Enable CORS
+app.use(function(req, res, next) {
+    var oneof = false;
+    if (req.headers.origin) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        oneof = true;
+    }
+    if (req.headers['access-control-request-method']) {
+        res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
+        oneof = true;
+    }
+    if (req.headers['access-control-request-headers']) {
+        res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
+        oneof = true;
+    }
+    if (oneof) {
+        res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
+    }
+
+    // intercept OPTIONS method
+    if (oneof && req.method == 'OPTIONS') {
+        res.send(200);
+    } else {
+        next();
+    }
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,7 +52,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/', routes);
+app.use('/api/', api);
 // app.use('/users', users);
 
 /// catch 404 and forwarding to error handler
