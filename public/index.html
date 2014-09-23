@@ -1,0 +1,29 @@
+<html>
+<head>
+	<title>CF Storm App v2</title>
+</head>
+<body ng-app="cfStormAppv2">
+	<h1>CF Storm App v2</h1>
+	<div ng-controller="AppsCtrl">
+		<div ng-show="error">{{ error }}</div>
+		<div ng-show="!error">
+			<h3>Apps (Total: {{ apps.total_results }})</h3>
+			<ul>
+			<li ng-repeat="app in apps.resources">
+				{{ app.entity.name }} 
+				<ul>
+				    <li>STATE: {{ app.entity.state }}</li>
+				    <li>Memory: {{ app.entity.memory}}MB</li>
+				    <li>Instances: {{ app.entity.instances}}</li>
+				    <li>Disk Quota: {{ app.entity.disk_quota }}MB</li>
+				</ul>
+			</li>
+			</ul>
+		</div>
+	</div>
+	
+
+	<script src="vendor/angular/angular.min.js"></script>
+	<script src="scripts/app.js"></script>
+</body>
+</html>

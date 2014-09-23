@@ -4,7 +4,7 @@ var CloudFoundryApi = require('cloud-foundry');
 
 var cfConfig = require('../config/cf.json');
 
-router.get('/', function(req, res) {
+router.get('/apps/', function(req, res) {
 
     var api_endpoint = cfConfig.Target;
     var api_token = cfConfig.AccessToken.replace('bearer ', '');
