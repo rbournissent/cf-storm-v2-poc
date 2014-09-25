@@ -2,7 +2,9 @@
   "name": "cf-storm-v2-poc",
   "version": "0.0.1",
   "dependencies": {
-    "angular": "~1.2.25"
+    "angular": "~1.2.25",
+    "oauth-ng": "~0.2.6",
+    "angular-route": "~1.2.25"
   },
   "devDependencies": {}
 }

@@ -29,3 +29,6 @@ public/vendor
 
 # Users Environment Variables
 .lock-wscript
+
+# Temp directory
+tmp

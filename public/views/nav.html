@@ -1,0 +1,46 @@
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">CF Storm App v2</a>
+    </div>
+    <ul class="nav navbar-top-links navbar-left">
+        <li class="dropdown" ng-show="selected_organization">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ selected_organization.entity.name }} <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li class="error" ng-show="error_organizations">{{ error_organizations }}</li>
+                <li ng-repeat="org in organizations.resources">
+                    <a href="#">{{ org.entity.name }}</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="dropdown" ng-show="selected_organization">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ selected_organization.entity.name }} <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li class="error" ng-show="error_organizations">{{ error_organizations }}</li>
+                <li ng-repeat="space in spaces.resources" ng-show="selected_organization.metadata.guid === space.entity.organization_guid">
+                    <a href="#">{{ org.entity.name }}</a>
+                </li>
+            </ul>
+        </li>
+
+        <li><a href="#"><span class="glyphicon glyphicon-plus"></span> New App</a></li>
+    </ul>
+
+    <ul class="nav navbar-top-links navbar-right">
+        <li>
+            <oauth
+              site="https://uaa.run.pivotal.io"
+              client-id="d6d2b510d18471d2e22aa202216e86c42beac80f9a6ac2da505dcb79c7b2fd99"
+              redirect-uri="http://localhost:9000"
+              profile-uri="http://oauth-ng-server.herokuapp.com/api/v1/me"
+              scope="public">
+            </oauth>
+        </li>
+    </ul>
+</nav>

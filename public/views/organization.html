@@ -1,0 +1,179 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Apps
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" >
+                        <thead>
+                            <tr>
+                                <th>App</th>
+                                <th>Instances</th>
+                                <th>Memory</th>
+                                <th>Disk usage</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ selected_organization }}</td>
+                                <td>{{ selected_organization }}</td>
+                                <td>{{ selected_organization }}MB</td>
+                                <td>{{ selected_organization }}MB</td>
+                                <td>{{ selected_organization }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Dashboard</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-institution fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ organizations.total_results }}</div>
+                        <div>Organizations</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-space-shuttle fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ spaces.total_results}}</div>
+                        <div>Total Spaces</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-cogs fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ apps.total_results }}</div>
+                        <div>Total Apps</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="error" ng-show="error_organizations">{{ error_organizations }}</div>
+<div class="col-lg-12">
+    <div class="panel panel-default" ng-repeat="org in organizations.resources">
+        <div class="panel-heading">
+            <strong>{{ org.entity.name }}</strong> (STATUS: <span class="text-{{ org.entity.status === 'active' ? 'success' : 'danger' }}">{{ org.entity.status }}</span>)
+        </div>
+        <!-- .panel-heading -->
+        <div class="panel-body">
+            <div class="panel-group" id="accordion{{ $index }}">
+                <div class="panel panel-default" ng-repeat="space in spaces.resources" ng-show="org.metadata.guid === space.entity.organization_guid">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion{{ $parent.$index }}" href="#collapse{{ $parent.$index+'-'+$index }}" class="">{{ space.entity.name }}</a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{ $parent.$index+'-'+$index }}" class="panel-collapse collapse in" style="">
+                        <div class="panel-body">
+                            <li ng-repeat="app in apps.resources" ng-show="space.metadata.guid === app.entity.space_guid">
+								{{ app.entity.name }}
+								<ul>
+								    <li>STATE: <span class="text-{{ app.entity.state === 'STARTED' ? 'success' : 'danger' }}">{{ app.entity.state }}</span></li>
+								    <li>Memory: {{ app.entity.memory}}MB</li>
+								    <li>Instances: {{ app.entity.instances}}</li>
+								    <li>Disk Quota: {{ app.entity.disk_quota }}MB</li>
+								</ul>
+							</li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- .panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>
+
+<div>
+	<div ng-show="!error_organizations">
+		<h3>Organizations (Total: {{ organizations.total_results }})</h3>
+		<ul>
+			<li ng-repeat="org in organizations.resources">
+				<span ng-click="org.collapsed = !org.collapsed">{{ org.entity.name }} (STATUS: {{ org.entity.status }})</span>
+				<ul ng-hide="org.collapsed || error_spaces">
+				    <li ng-repeat="space in spaces.resources" ng-show="org.metadata.guid === space.entity.organization_guid">
+				    	<span ng-click="space.collapsed = !space.collapsed">{{ space.entity.name }}</span>
+				    	<ul ng-hide="space.collapsed || error_apps">
+				    	    <li ng-repeat="app in apps.resources" ng-show="space.metadata.guid === app.entity.space_guid">
+								<span ng-click="app.collapsed = !app.collapsed">{{ app.entity.name }} </span>
+								<ul ng-hide="app.collapsed">
+								    <li>STATE: {{ app.entity.state }}</li>
+								    <li>Memory: {{ app.entity.memory}}MB</li>
+								    <li>Instances: {{ app.entity.instances}}</li>
+								    <li>Disk Quota: {{ app.entity.disk_quota }}MB</li>
+								</ul>
+							</li>
+				    	</ul>
+				    </li>
+				    <div class="error" ng-show="error_apps">{{ error_apps }}</div>
+				</ul>
+			</li>
+			<div class="error" ng-show="error_spaces">{{ error_spaces }}</div>
+		</ul>
+	</div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable();
+    });
+    </script>
